@@ -2,9 +2,6 @@ package com.xamgore.particles;
 
 import java.util.Random;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-
 public class Particle {
     public int color;
     private final static int[] COLOURS = { 0xff69D2E7, 0xffA7DBD8, 0xffE0E4CC,

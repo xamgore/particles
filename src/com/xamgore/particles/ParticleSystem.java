@@ -20,6 +20,7 @@ public class ParticleSystem {
 
     public ParticleSystem() {
         particles = new LinkedList<>();
+        //paint.setAntiAlias(true);
     }
 
 

@@ -25,7 +25,9 @@ public class GameSurfaceView extends SurfaceView
         super(context);
 
         mSurfaceHolder = getHolder();
-        mSurfaceHolder.addCallback(this);
+        if (mSurfaceHolder != null) {
+            mSurfaceHolder.addCallback(this);  // may be NULL
+        }
         particleSystem = new ParticleSystem();
     }
 
