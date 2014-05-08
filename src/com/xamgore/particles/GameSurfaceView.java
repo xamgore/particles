@@ -25,13 +25,15 @@ public class GameSurfaceView extends SurfaceView
         super(context);
 
         mSurfaceHolder = getHolder();
-        if (mSurfaceHolder != null) {
-            mSurfaceHolder.addCallback(this);  // may be NULL
-        }
+        mSurfaceHolder.addCallback(this);  // may be NULL
+
         particleSystem = new ParticleSystem();
     }
 
-
+    /*
+     * Callback for when the surface has been created
+     * @param SurfaceHolder The surface holder
+     */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -82,7 +84,7 @@ public class GameSurfaceView extends SurfaceView
     public boolean onTouchEvent(MotionEvent event) {
         // ACTION_DOWN || ACTION_POINTER_DOWN || ACTION_MOVE
         if (event.getAction() >= 0 && event.getAction() < 3)
-            synchronized (mSurfaceHolder) {
+            synchronized (particleSystem) {
                 boolean multiTouch = event.getPointerCount() > 1;
 
                 // Create flushes under each finger
@@ -109,7 +111,7 @@ public class GameSurfaceView extends SurfaceView
 
             while (keepRunning) {
                 Fps.startMeasuringDelay();
-                synchronized (mSurfaceHolder) {
+                synchronized (particleSystem) {
                     particleSystem.update();
                 }
                 c = null;
@@ -117,7 +119,7 @@ public class GameSurfaceView extends SurfaceView
                 try {
                     c = mSurfaceHolder.lockCanvas();
                     if (c != null) {
-                        synchronized (mSurfaceHolder) {
+                        synchronized (particleSystem) {
                             onDraw(c);
                         }
                     }
