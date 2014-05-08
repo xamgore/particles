@@ -7,6 +7,10 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameSurfaceView extends SurfaceView
         implements SurfaceHolder.Callback {
@@ -16,7 +20,6 @@ public class GameSurfaceView extends SurfaceView
 
     private Paint paint;
     private DrawingThread thread;
-    private final SurfaceHolder mSurfaceHolder;
     private final ParticleSystem particleSystem;
 
 
@@ -24,9 +27,7 @@ public class GameSurfaceView extends SurfaceView
     public GameSurfaceView(Context context) {
         super(context);
 
-        mSurfaceHolder = getHolder();
-        mSurfaceHolder.addCallback(this);  // may be NULL
-
+        getHolder().addCallback(this);  // may be NULL
         particleSystem = new ParticleSystem();
     }
 
@@ -107,6 +108,7 @@ public class GameSurfaceView extends SurfaceView
 
         @Override
         public void run() {
+            SurfaceHolder mSurfaceHolder = getHolder();
             Canvas c;
 
             while (keepRunning) {
