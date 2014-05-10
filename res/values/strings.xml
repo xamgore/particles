@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Particles</string>
-
+    <string name="menu_option_hq">High Quality</string>
     <string name="about">Just for fun</string>
 
 </resources>

@@ -7,10 +7,6 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class GameSurfaceView extends SurfaceView
         implements SurfaceHolder.Callback {
@@ -21,7 +17,6 @@ public class GameSurfaceView extends SurfaceView
     private Paint paint;
     private DrawingThread thread;
     private final ParticleSystem particleSystem;
-
 
 
     public GameSurfaceView(Context context) {
@@ -61,7 +56,8 @@ public class GameSurfaceView extends SurfaceView
 
                 paint = null;
                 thread = null;
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
         }
     }
 
@@ -79,7 +75,6 @@ public class GameSurfaceView extends SurfaceView
         canvas.drawText(Fps.getFpsAsString(), 10, 10, paint);
         canvas.drawText(String.valueOf(particleSystem.count()), 50, 10, paint);
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -101,6 +96,17 @@ public class GameSurfaceView extends SurfaceView
         return super.onTouchEvent(event);
     }
 
+    public void setHighQuality(boolean state) {
+        synchronized (particleSystem) {
+            particleSystem.paint.setAntiAlias(state);
+        }
+    }
+
+    private static boolean FLAG_BACGKROUND_ANIMATION;
+
+    public void showBackgroundAnimation(boolean state) {
+        FLAG_BACGKROUND_ANIMATION = state;
+    }
 
 
     private class DrawingThread extends Thread {
@@ -114,6 +120,13 @@ public class GameSurfaceView extends SurfaceView
             while (keepRunning) {
                 Fps.startMeasuringDelay();
                 synchronized (particleSystem) {
+                    if (FLAG_BACGKROUND_ANIMATION)
+                        particleSystem.makeFlush(
+                                mSurfaceHolder.getSurfaceFrame().centerX(),
+                                mSurfaceHolder.getSurfaceFrame().centerY(),
+                                false
+                        );
+
                     particleSystem.update();
                 }
                 c = null;

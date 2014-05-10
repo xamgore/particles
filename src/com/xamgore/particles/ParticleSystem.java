@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class ParticleSystem {
     private static final Random rnd = new Random();
-    private static final Paint paint = new Paint();
+    public static final Paint paint = new Paint();
 
 
     private final static int MAX_PARTICLES_HARDMODE = 380;
@@ -38,7 +38,7 @@ public class ParticleSystem {
      * @param y координата оси Oy
      * @param hardmode режим увеличенного кол-ва частиц
      */
-    private void addParticle(float x, float y, boolean hardmode) {
+    private synchronized void addParticle(float x, float y, boolean hardmode) {
         if (particles.size() >= (hardmode ? MAX_PARTICLES_HARDMODE
                 : MAX_PARTICLES)) {
             particles.poll();
@@ -48,8 +48,9 @@ public class ParticleSystem {
 
     /**
      * Создание небольшой вспышки из 1-4 частиц.
+     * @param hardmode режим увеличенного кол-ва частиц
      */
-    public void makeFlush(float x, float y, boolean hardmode) {
+    public synchronized void makeFlush(float x, float y, boolean hardmode) {
         final int count = rnd.nextInt(4) + 1;
         for (int i = 0; i < count; i++)
             addParticle(x, y, hardmode);
@@ -59,7 +60,7 @@ public class ParticleSystem {
     /**
      * Создание вспышки частиц в центре прямоугольника размера width * height.
      */
-    public void makeOutburst(int width, int height) {
+    public synchronized void makeOutburst(int width, int height) {
         // Set off some initial particles
         float x, y;
 
@@ -74,7 +75,7 @@ public class ParticleSystem {
      * Вывод частиц на canvas.
      * TODO перенести в класс Graphics.
      */
-    public void draw(Canvas canvas) {
+    public synchronized void draw(Canvas canvas) {
         for (Particle e : particles) {
             paint.setColor(e.color);
             canvas.drawCircle(e.x, e.y, e.radius, paint);
@@ -86,7 +87,7 @@ public class ParticleSystem {
      * Обновление состояния системы частиц.
      * Старые частицы удаляются, новые изменяют своё положение.
      */
-    public void update() {
+    public synchronized void update() {
         ListIterator<Particle> iter = particles.listIterator();
 
         while (iter.hasNext()) {
