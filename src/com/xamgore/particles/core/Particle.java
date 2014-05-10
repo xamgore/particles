@@ -5,7 +5,7 @@ import java.util.Random;
 import static com.xamgore.particles.core.Graphics.*;
 
 public class Particle {
-    public int color;
+    public final int color;
     private final static float PI = 2f * (float) (105414357.0 / 33554432.0 + 1.984187159361080883e-9);
 	private final static Random rnd = new Random();
 
