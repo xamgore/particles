@@ -1,8 +1,6 @@
-package com.xamgore.particles;
+package com.xamgore.particles.core;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
-
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
@@ -10,17 +8,14 @@ import java.util.Random;
 
 public class ParticleSystem {
     private static final Random rnd = new Random();
-    public static final Paint paint = new Paint();
-
+    private LinkedList<Particle> particles;
 
     private final static int MAX_PARTICLES_HARDMODE = 380;
     private final static int MAX_PARTICLES = 280;
-    private LinkedList<Particle> particles;
 
 
     public ParticleSystem() {
         particles = new LinkedList<>();
-        //paint.setAntiAlias(true);
     }
 
 
@@ -30,7 +25,6 @@ public class ParticleSystem {
     public int count() {
         return particles.size();
     }
-
 
     /**
      * Добавляет новую частицу в систему.
@@ -73,12 +67,10 @@ public class ParticleSystem {
 
     /**
      * Вывод частиц на canvas.
-     * TODO перенести в класс Graphics.
      */
     public synchronized void draw(Canvas canvas) {
         for (Particle e : particles) {
-            paint.setColor(e.color);
-            canvas.drawCircle(e.x, e.y, e.radius, paint);
+            e.draw(canvas);
         }
     }
 
@@ -97,5 +89,4 @@ public class ParticleSystem {
             else iter.remove();
         }
     }
-
 }

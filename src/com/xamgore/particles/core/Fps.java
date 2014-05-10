@@ -1,6 +1,6 @@
 /* By aNNiMON from GipGameActivity */
 
-package com.xamgore.particles;
+package com.xamgore.particles.core;
 
 public class Fps {
 

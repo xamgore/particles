@@ -1,13 +1,13 @@
-package com.xamgore.particles;
+package com.xamgore.particles.core;
 
+import android.graphics.Canvas;
 import java.util.Random;
+import static com.xamgore.particles.core.Graphics.*;
 
 public class Particle {
     public int color;
-    private final static int[] COLOURS = { 0xff69D2E7, 0xffA7DBD8, 0xffE0E4CC,
-            0xffF38630, 0xffFA6900, 0xffFF4E50, 0xffF9D423 };
-    private final static float PI = 2f * (float) FastMath.PI;
-	private static final Random rnd = new Random();
+    private final static float PI = 2f * (float) (105414357.0 / 33554432.0 + 1.984187159361080883e-9);
+	private final static Random rnd = new Random();
 
     private boolean alive;
     public float x, y, radius;
@@ -21,7 +21,7 @@ public class Particle {
 		wander = rnd.nextFloat() * 1.5f + 0.5f;
 		theta = rnd.nextFloat() * PI;
 		drag = rnd.nextFloat() * 0.09f + 0.9f;
-		color = COLOURS[rnd.nextInt(COLOURS.length)];
+		color = getColours()[rnd.nextInt(getColours().length)];
 
 		this.x = x;
 		this.y = y;
@@ -49,4 +49,9 @@ public class Particle {
 		radius *= 0.96F;
 		alive = (radius > 2);
 	}
+
+    public void draw(Canvas canvas) {
+        Graphics.paint.setColor(color);
+        canvas.drawCircle(x, y, radius, Graphics.paint);
+    }
 }
