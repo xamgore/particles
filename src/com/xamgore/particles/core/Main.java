@@ -7,21 +7,18 @@
 package com.xamgore.particles.core;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
+import com.xamgore.particles.game.MainScreen;
 
 public class Main extends Activity {
-    public static Context context = null;
-	public static GameView gameView;
-    public static GameManager game;
+	private GameView gameView;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        game = new GameManager();
-        gameView = new GameView(this);
+        GameScreen gs = new MainScreen();
+        gameView = new GameView(this, gs);
         setContentView(gameView);
-        context = getApplicationContext();
 	}
 }

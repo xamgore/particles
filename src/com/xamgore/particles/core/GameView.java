@@ -12,9 +12,11 @@ import android.view.SurfaceView;
  */
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private DrawingThread thread;
+    public GameScreen gameState;
 
-    public GameView(Context context) {
+    public GameView(Context context, GameScreen screen) {
         super(context);
+        gameState = screen;
 
         setFocusableInTouchMode(true);
         getHolder().addCallback(this);
@@ -39,6 +41,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 thread.join();
                 retry = false;
+                gameState = null;
                 thread = null;
             } catch (InterruptedException e) {
             }
@@ -47,23 +50,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Main.game.onSurfaceChanged(width, height);
+        gameState.onSurfaceChanged(width, height);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return Main.game.onTouchEvent(event) || super.onTouchEvent(event);
+        return gameState.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return Main.game.onKeyDownEvent(keyCode, event) ||
+        return gameState.onKeyDownEvent(keyCode, event) ||
                 super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return Main.game.onKeyUpEvent(keyCode, event) ||
+        return gameState.onKeyUpEvent(keyCode, event) ||
                 super.onKeyUp(keyCode, event);
     }
 
@@ -79,7 +82,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 Fps.startMeasuringDelay();
 
                 /* Game mechanics */
-                Main.game.update();
+                gameState.onUpdate();
 
                 /* Drawings */
                 canvas = null;
@@ -87,7 +90,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas = mSurfaceHolder.lockCanvas();
                     if (canvas != null) {
                         // Send request to Game class
-                        Main.game.draw(canvas);
+                        gameState.onDraw(canvas);
                     }
                 } finally {
                     if (canvas != null)

@@ -1,6 +1,9 @@
-package com.xamgore.particles.core;
+package com.xamgore.particles.game;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import com.xamgore.particles.game.Particle;
+
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
@@ -68,9 +71,9 @@ public class ParticleSystem {
     /**
      * Вывод частиц на canvas.
      */
-    public synchronized void draw(Canvas canvas) {
+    public synchronized void draw(Canvas canvas, Paint paint) {
         for (Particle e : particles) {
-            e.draw(canvas);
+            e.draw(canvas, paint);
         }
     }
 
