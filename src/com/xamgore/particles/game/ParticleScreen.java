@@ -1,22 +1,23 @@
 package com.xamgore.particles.game;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.*;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import com.xamgore.particles.core.Fps;
 import com.xamgore.particles.core.GameScreen;
+import com.xamgore.particles.core.GameView;
 
 import java.util.Random;
 
-public class MainScreen extends GameScreen {
-    private final ParticleSystem particleSystem;
+public class ParticleScreen extends GameScreen {
+    private final ParticleSystem particleSystem = new ParticleSystem();
+    private final static boolean FLAG_HQ_OPTION = true;
+    private final static Random rnd = new Random();
     private final Paint paint;
-    private static final int BACKGROUND_COLOR = 0xff191919;
-    private static final Random rnd = new Random();
 
     private int colorThemeNum;
+    private final static int BACKGROUND_COLOR = 0xff191919;
     private final static int[][] COLOURS = {
             {0xff69D2E7, 0xffA7DBD8, 0xffE0E4CC,
                     0xffF38630, 0xffFA6900, 0xffFF4E50, 0xffF9D423},
@@ -29,30 +30,35 @@ public class MainScreen extends GameScreen {
             {0xfffef4b6, 0xffffd6a2, 0xffafd0fd, 0xff5785e3},
     };
 
-    public MainScreen() {
+    public ParticleScreen() {
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
 
         colorThemeNum = rnd.nextInt(COLOURS.length);
         Particle.colours = COLOURS[colorThemeNum];
-
-        particleSystem = new ParticleSystem();
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         // Fill background
-        paint.setColor(BACKGROUND_COLOR);
-        canvas.drawPaint(paint);
+        canvas.drawColor(BACKGROUND_COLOR);
 
         // Draw particles
         particleSystem.draw(canvas, paint);
 
+        // Draw option button
+        paint.setAntiAlias(true);
+        paint.setColor(0x77ffffff);
+        canvas.drawCircle(width, height, 30, paint);
+        paint.setAntiAlias(false);
+
         // Draw FPS
         paint.setColor(Color.WHITE);
         canvas.drawText("FPS: " + Fps.getFpsAsString(), 10, 10, paint);
-        canvas.drawText("HQ is " + (paint.isAntiAlias() ? "ON" : "OFF"), 70, 10, paint);
-        canvas.drawText(String.valueOf(particleSystem.count()), 145, 10, paint);
+        if (FLAG_HQ_OPTION) {
+            canvas.drawText("HQ is " + (paint.isAntiAlias() ? "ON" : "OFF"), 70, 10, paint);
+            canvas.drawText(String.valueOf(particleSystem.count()), 145, 10, paint);
+        } else canvas.drawText(String.valueOf(particleSystem.count()), 70, 10, paint);
     }
 
     @Override
@@ -62,11 +68,19 @@ public class MainScreen extends GameScreen {
 
     @Override
     public void onSurfaceChanged(int width, int height) {
+        super.onSurfaceChanged(width, height);
+
         particleSystem.makeOutburst(width, height);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == 0 && event.getX() > width - 30 && event.getY() > height - 30) {
+            // XXX: There's smth wrong here.
+            GameView.getInstance().gameState = new OptionScreen(this);
+            return true;
+        }
+
         // ACTION_DOWN || ACTION_POINTER_DOWN || ACTION_MOVE
         if (event.getAction() >= 0 && event.getAction() < 3) {
             boolean multiTouch = event.getPointerCount() > 1;
@@ -87,18 +101,22 @@ public class MainScreen extends GameScreen {
     public boolean onKeyDownEvent(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                // Next theme
+                // Next color theme
                 colorThemeNum = (colorThemeNum + 1) % COLOURS.length;
                 Particle.colours = COLOURS[colorThemeNum];
                 return true;
+
             case KeyEvent.KEYCODE_VOLUME_UP:
-                // Prev theme
+                // Prev color theme
                 colorThemeNum = (COLOURS.length + colorThemeNum - 1) % COLOURS.length;
                 Particle.colours = COLOURS[colorThemeNum];
                 return true;
+
             case KeyEvent.KEYCODE_CAMERA:
-                paint.setAntiAlias(!paint.isAntiAlias());
-                return true;
+                if (FLAG_HQ_OPTION) {
+                    paint.setAntiAlias(!paint.isAntiAlias());
+                    return true;
+                } break;
         }
 
         return false;
