@@ -2,8 +2,6 @@ package com.xamgore.particles.game;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import com.xamgore.particles.game.Particle;
-
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
@@ -31,8 +29,9 @@ public class ParticleSystem {
 
     /**
      * Добавляет новую частицу в систему.
-     * @param x координата оси Ox
-     * @param y координата оси Oy
+     *
+     * @param x        координата оси Ox
+     * @param y        координата оси Oy
      * @param hardmode режим увеличенного кол-ва частиц
      */
     private synchronized void addParticle(float x, float y, boolean hardmode) {
@@ -45,6 +44,7 @@ public class ParticleSystem {
 
     /**
      * Создание небольшой вспышки из 1-4 частиц.
+     *
      * @param hardmode режим увеличенного кол-ва частиц
      */
     public synchronized void makeFlush(float x, float y, boolean hardmode) {

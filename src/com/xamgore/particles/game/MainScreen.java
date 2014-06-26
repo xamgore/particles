@@ -1,20 +1,26 @@
 package com.xamgore.particles.game;
 
-import android.graphics.*;
-import android.util.Log;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import com.xamgore.particles.core.Core;
 import com.xamgore.particles.core.Fps;
 import com.xamgore.particles.core.GameScreen;
-import com.xamgore.particles.core.GameView;
 
 import java.util.Random;
 
-public class ParticleScreen extends GameScreen {
+public class MainScreen extends GameScreen {
     private final ParticleSystem particleSystem = new ParticleSystem();
     private final static boolean FLAG_HQ_OPTION = true;
     private final static Random rnd = new Random();
-    private final Paint paint;
+//    private OptionScreen nextScreen;
+
+    private boolean ANTI_ALIAS_FLAG = false;
+    private Paint paint;
+    private int width;
+    private int height;
 
     private int colorThemeNum;
     private final static int BACKGROUND_COLOR = 0xff191919;
@@ -30,7 +36,10 @@ public class ParticleScreen extends GameScreen {
             {0xfffef4b6, 0xffffd6a2, 0xffafd0fd, 0xff5785e3},
     };
 
-    public ParticleScreen() {
+    public MainScreen(int width, int height) {
+        this.width = width;
+        this.height = height;
+
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
 
@@ -39,7 +48,7 @@ public class ParticleScreen extends GameScreen {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
+    public void draw(Canvas canvas) {
         // Fill background
         canvas.drawColor(BACKGROUND_COLOR);
 
@@ -50,7 +59,7 @@ public class ParticleScreen extends GameScreen {
         paint.setAntiAlias(true);
         paint.setColor(0x77ffffff);
         canvas.drawCircle(width, height, 30, paint);
-        paint.setAntiAlias(false);
+        paint.setAntiAlias(ANTI_ALIAS_FLAG);
 
         // Draw FPS
         paint.setColor(Color.WHITE);
@@ -62,13 +71,14 @@ public class ParticleScreen extends GameScreen {
     }
 
     @Override
-    public void onUpdate() {
+    public void update() {
         particleSystem.update();
     }
 
     @Override
     public void onSurfaceChanged(int width, int height) {
-        super.onSurfaceChanged(width, height);
+        this.width = width;
+        this.height = height;
 
         particleSystem.makeOutburst(width, height);
     }
@@ -76,9 +86,16 @@ public class ParticleScreen extends GameScreen {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == 0 && event.getX() > width - 30 && event.getY() > height - 30) {
-            // XXX: There's smth wrong here.
-            GameView.getInstance().gameState = new OptionScreen(this);
-            return true;
+//            if (nextScreen == null)
+//                nextScreen = new OptionScreen(this);
+//            Core.updateGameState(nextScreen);
+
+            if (FLAG_HQ_OPTION) {
+                ANTI_ALIAS_FLAG = !ANTI_ALIAS_FLAG;
+                paint.setAntiAlias(ANTI_ALIAS_FLAG);
+                Core.sleep(100);
+                return true;
+            }
         }
 
         // ACTION_DOWN || ACTION_POINTER_DOWN || ACTION_MOVE
@@ -111,12 +128,6 @@ public class ParticleScreen extends GameScreen {
                 colorThemeNum = (COLOURS.length + colorThemeNum - 1) % COLOURS.length;
                 Particle.colours = COLOURS[colorThemeNum];
                 return true;
-
-            case KeyEvent.KEYCODE_CAMERA:
-                if (FLAG_HQ_OPTION) {
-                    paint.setAntiAlias(!paint.isAntiAlias());
-                    return true;
-                } break;
         }
 
         return false;

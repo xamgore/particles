@@ -1,11 +1,10 @@
-package com.xamgore.particles.game;
+package com.xamgore.particles.options;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.KeyEvent;
+import com.xamgore.particles.core.Core;
 import com.xamgore.particles.core.GameScreen;
-import com.xamgore.particles.core.GameView;
 
 public class OptionScreen extends GameScreen {
     private final Paint paint;
@@ -19,7 +18,7 @@ public class OptionScreen extends GameScreen {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
+    public void draw(Canvas canvas) {
         // Background
         canvas.drawColor(0xffffffff);
     }
@@ -28,10 +27,11 @@ public class OptionScreen extends GameScreen {
     public boolean onKeyDownEvent(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             try {
+                Core.updateGameState(parent);
                 Thread.sleep(500);
             } catch(Exception e) {}
 
-            GameView.getInstance().gameState = parent;
+            return true;
         }
 
         return false;

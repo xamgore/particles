@@ -1,39 +1,28 @@
 package com.xamgore.particles.core;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import com.xamgore.particles.game.ParticleScreen;
 
 /**
- * Полотно. Умеет ловить нажатия и отрисовывать канвас.
+ * @author Goga
  */
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
-    /* Singleton implementation */
-    private static GameView _instance = null;
 
-    public static GameView init(Context context) {
-        return _instance = new GameView(context);
-    }
-
-    public static GameView getInstance() {
-        return _instance;
-    }
-
-    private GameView(Context context) {
+    public GameView(Context context, GameScreen state) {
         super(context);
-        gameState = new ParticleScreen();
+        this.gameState = state;
 
         setFocusableInTouchMode(true);
         getHolder().addCallback(this);
     }
 
-
     /* Class implementation */
-    public GameScreen gameState;
+    private GameScreen gameState;
     private DrawingThread thread;
 
     private class DrawingThread extends Thread {
@@ -48,7 +37,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 Fps.startMeasuringDelay();
 
                 /* Game mechanics */
-                gameState.onUpdate();
+                gameState.update();
 
                 /* Drawings */
                 canvas = null;
@@ -56,7 +45,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas = mSurfaceHolder.lockCanvas();
                     if (canvas != null) {
                         // Send request to Game class
-                        gameState.onDraw(canvas);
+                        gameState.draw(canvas);
                     }
                 } finally {
                     if (canvas != null)
@@ -75,6 +64,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     /* Series of event listeners. */
+    public void onGameStateChanged(GameScreen state) {
+        this.gameState = state;
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         thread = new DrawingThread();
@@ -84,38 +77,56 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        thread.keepRunning = false;
-        boolean retry = true;
-        while (retry) {
-            try {
-                thread.join();
-                retry = false;
-                thread = null;
-            } catch (InterruptedException e) {
+        stop();
+    }
+
+    public void stop() {
+        if (thread != null) {
+            thread.keepRunning = false;
+            boolean retry = true;
+            while (retry) {
+                try {
+                    thread.join();
+                    retry = false;
+                } catch (InterruptedException e) {
+                }
             }
         }
+        ((Activity) getContext()).finish();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        gameState.onSurfaceChanged(width, height);
+        ResourceManager.init(getResources(), width, height);
+        if (gameState != null) {
+            gameState.onSurfaceChanged(width, height);
+        }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return gameState.onTouchEvent(event) || super.onTouchEvent(event);
+        boolean state = false;
+        if (gameState != null) {
+            state = gameState.onTouchEvent(event);
+        }
+        return state || super.onTouchEvent(event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return gameState.onKeyDownEvent(keyCode, event) ||
-                super.onKeyDown(keyCode, event);
+        boolean state = false;
+        if (gameState != null) {
+            state = gameState.onKeyDownEvent(keyCode, event);
+        }
+        return state || super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return gameState.onKeyUpEvent(keyCode, event) ||
-                super.onKeyUp(keyCode, event);
+        boolean state = false;
+        if (gameState != null) {
+            state = gameState.onKeyUpEvent(keyCode, event);
+        }
+        return state || super.onKeyUp(keyCode, event);
     }
-
 }
