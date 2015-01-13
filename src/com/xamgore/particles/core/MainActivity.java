@@ -25,4 +25,16 @@ public class MainActivity extends Activity {
 
         Core.connectWith(this, new BlankScreen());
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Core.registerAccelerometer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Core.unregisterAccelerometer();
+    }
 }

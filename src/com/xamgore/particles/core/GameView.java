@@ -3,6 +3,8 @@ package com.xamgore.particles.core;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -11,7 +13,7 @@ import android.view.SurfaceView;
 /**
  * @author Goga
  */
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback, android.hardware.SensorEventListener {
 
     public GameView(Context context, GameScreen state) {
         super(context);
@@ -131,4 +133,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         return state || super.onKeyUp(keyCode, event);
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (Core.gameScreen != null) {
+            Core.gameScreen.sensorEventListener.onEvent(event);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 }

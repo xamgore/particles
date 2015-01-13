@@ -2,6 +2,7 @@ package com.xamgore.particles.core;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.hardware.SensorEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import java.util.EventListener;
@@ -20,6 +21,7 @@ public abstract class GameScreen {
     public KeyEventListener keyUpEventListener   = new KeyEventListener();
     public DrawEventListener drawEventListener   = new DrawEventListener();
     public UpdateEventListener updateEventListener = new UpdateEventListener();
+    public SensorEventListener sensorEventListener = new SensorEventListener();
     public SurfaceChangedEventListener surfaceChangedEventListener =
             new SurfaceChangedEventListener();
 
@@ -53,6 +55,10 @@ public abstract class GameScreen {
          * Should compute some game mechanics.
          */
         public void onEvent() {}
+    }
+
+    public class SensorEventListener implements EventListener {
+        public void onEvent(SensorEvent event) {}
     }
 
     public class SurfaceChangedEventListener implements EventListener {
