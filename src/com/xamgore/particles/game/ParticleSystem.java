@@ -29,6 +29,7 @@ public class ParticleSystem {
 
     public ParticleSystem() {
         particles = new LinkedList<>();
+        this.pickRandomColor();
     }
 
 
