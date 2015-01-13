@@ -1,6 +1,6 @@
 package com.xamgore.particles.core;
 
-import android.content.Context;
+import android.app.Activity;
 
 /**
  * Contains links to static classes, contains the context, etc.
@@ -11,14 +11,15 @@ public class Core {
     private static GameView gameView;
     private static GameScreen gameState;
 
-    private Core(Context ctx, GameScreen screen) {
+    private Core(Activity ctx, GameScreen screen) {
         // load all modules
         gameState = screen;
         gameView = new GameView(ctx, screen);
+        ctx.setContentView(gameView);
     }
 
-    public static Core connectWith(Context context, GameScreen screen) {
-        return _instance = new Core(context, screen);
+    public static Core connectWith(Activity ctx, GameScreen screen) {
+        return _instance = new Core(ctx, screen);
     }
 
     /* For game */

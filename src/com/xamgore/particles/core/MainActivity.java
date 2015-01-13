@@ -15,8 +15,6 @@ import com.xamgore.particles.options.BlankScreen;
  * @author Xamgore
  */
 public class MainActivity extends Activity {
-    private Core core;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +23,6 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        core = Core.connectWith(this, new BlankScreen());
-        setContentView(Core.getView());
+        Core.connectWith(this, new BlankScreen());
     }
 }
