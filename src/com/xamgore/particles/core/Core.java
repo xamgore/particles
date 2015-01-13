@@ -49,7 +49,7 @@ public class Core {
     /* Sensor control */
     public static void registerAccelerometer() {
         if (accelerometer != null)
-            sensorManager.registerListener(gameView, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(gameView, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     public static void unregisterAccelerometer() {
