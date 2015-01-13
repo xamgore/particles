@@ -1,4 +1,4 @@
-package com.xamgore.particles.options;
+package com.xamgore.particles.game;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

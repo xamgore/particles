@@ -9,7 +9,7 @@ package com.xamgore.particles.core;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.WindowManager;
-import com.xamgore.particles.options.BlankScreen;
+import com.xamgore.particles.game.BlankScreen;
 
 /**
  * @author Xamgore
