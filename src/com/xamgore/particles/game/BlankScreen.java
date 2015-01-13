@@ -17,7 +17,7 @@ public class BlankScreen extends GameScreen {
         this.surfaceChangedEventListener = new SurfaceChangedEventListener() {
             @Override
             public void onEvent() {
-                Core.updateGameState(new MainScreen());
+                Core.updateGameState(new OptionScreen());
             }
         };
     }
