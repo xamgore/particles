@@ -96,9 +96,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        ResourceManager.init(getResources(), width, height);
+        GameScreen.width = width;
+        GameScreen.height = height;
+
+        ResourceManager.init(getResources());
         if (Core.gameScreen != null) {
-            Core.gameScreen.surfaceChangedEventListener.onEvent(width, height);
+            Core.gameScreen.surfaceChangedEventListener.onEvent();
         }
     }
 

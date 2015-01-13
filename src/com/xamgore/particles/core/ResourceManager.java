@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 public class ResourceManager {
     private static float densityScale;
 
-    public static void init(Resources res, int width, int height) {
+    public static void init(Resources res) {
         final DisplayMetrics metrics = res.getDisplayMetrics();
         densityScale = (metrics.densityDpi / 160f);
     }

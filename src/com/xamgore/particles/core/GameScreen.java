@@ -10,8 +10,8 @@ import java.util.EventListener;
  */
 public abstract class GameScreen {
 
-    protected int width;
-    protected int height;
+    static public int width;
+    static public int height;
 
     public TouchEventListener touchEventListener = new TouchEventListener();
     public KeyEventListener keyDownEventListener = new KeyEventListener();
@@ -60,6 +60,6 @@ public abstract class GameScreen {
          * the imagery in the surface.  This method is always called at least
          * once, after GameView has initialized.
          */
-        public void onEvent(int screenWidth, int screenHeight) {}
+        public void onEvent() {}
     }
 }

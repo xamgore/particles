@@ -1,18 +1,15 @@
 package com.xamgore.particles.game;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.KeyEvent;
 import com.xamgore.particles.core.Core;
 import com.xamgore.particles.core.GameScreen;
 
 public class OptionScreen extends GameScreen {
-    private final Paint paint;
-
-    public OptionScreen(final GameScreen parent) {
-        paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-
+    public OptionScreen() {
+        final GameScreen parent = Core.gameScreen;
 
         this.keyDownEventListener = new KeyEventListener() {
             @Override
@@ -29,11 +26,29 @@ public class OptionScreen extends GameScreen {
             }
         };
 
+
+        final ParticleSystem particles = new ParticleSystem();
+
+
+        this.updateEventListener = new UpdateEventListener() {
+            @Override
+            public void onEvent() {
+                particles.makeFlush(0, 0, false);
+                particles.update();
+            }
+        };
+
+
+        final Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAntiAlias(true);
+
         this.drawEventListener = new DrawEventListener() {
             @Override
             public void onEvent(Canvas canvas) {
-                // Background
-                canvas.drawColor(0xffffffff);
+                canvas.drawColor(Color.WHITE);
+                particles.draw(canvas, paint);
+                canvas.drawCircle(width / 2, height / 2, 90, paint);
             }
         };
     }

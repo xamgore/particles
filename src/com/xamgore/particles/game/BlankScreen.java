@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import com.xamgore.particles.core.Core;
 import com.xamgore.particles.core.GameScreen;
-import com.xamgore.particles.game.MainScreen;
 
 public class BlankScreen extends GameScreen {
     public BlankScreen() {
@@ -17,8 +16,8 @@ public class BlankScreen extends GameScreen {
 
         this.surfaceChangedEventListener = new SurfaceChangedEventListener() {
             @Override
-            public void onEvent(int screenWidth, int screenHeight) {
-                Core.updateGameState(new MainScreen(screenWidth, screenHeight));
+            public void onEvent() {
+                Core.updateGameState(new MainScreen());
             }
         };
     }

@@ -15,7 +15,6 @@ public class MainScreen extends GameScreen {
     private final ParticleSystem particleSystem = new ParticleSystem();
     private final static boolean FLAG_HQ_OPTION = true;
     private final static Random rnd = new Random();
-//    private OptionScreen nextScreen;
 
     private boolean ANTI_ALIAS_FLAG = false;
     private Paint paint;
@@ -34,15 +33,12 @@ public class MainScreen extends GameScreen {
             {0xfffef4b6, 0xffffd6a2, 0xffafd0fd, 0xff5785e3},
     };
 
-    public MainScreen(final int screenWidth, final int screenHeight) {
+    public MainScreen() {
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
 
         colorThemeNum = rnd.nextInt(COLOURS.length);
         Particle.colours = COLOURS[colorThemeNum];
-
-        width = screenWidth;
-        height = screenHeight;
 
         this.keyDownEventListener = new KeyEventListener() {
             @Override
@@ -69,9 +65,8 @@ public class MainScreen extends GameScreen {
             @Override
             public boolean onEvent(MotionEvent event) {
                 if (event.getAction() == 0 && event.getX() > width - 30 && event.getY() > height - 30) {
-//              if (nextScreen == null)
-//                  nextScreen = new OptionScreen(this);
-//              Core.updateGameState(nextScreen);
+                    OptionScreen nextScreen = new OptionScreen();
+                    Core.updateGameState(nextScreen);
 
                     if (FLAG_HQ_OPTION) {
                         ANTI_ALIAS_FLAG = !ANTI_ALIAS_FLAG;
@@ -132,10 +127,7 @@ public class MainScreen extends GameScreen {
 
         this.surfaceChangedEventListener = new SurfaceChangedEventListener() {
             @Override
-            public void onEvent(int screenWidth, int screenHeight) {
-                width = screenWidth;
-                height = screenHeight;
-
+            public void onEvent() {
                 particleSystem.makeOutburst(width, height);
             }
         };
