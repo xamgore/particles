@@ -14,22 +14,6 @@ public class OptionScreen extends GameScreen {
     public OptionScreen() {
         final GameScreen parent = Core.gameScreen;
 
-        this.keyDownEventListener = new KeyEventListener() {
-            @Override
-            public boolean onEvent(int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    try {
-                        Core.updateGameState(parent);
-                        Thread.sleep(500);
-                    } catch(Exception e) {}
-
-                    return true;
-                }
-                return false;
-            }
-        };
-
-
         final ParticleSystem particles = new ParticleSystem();
         x = width / 2;
         y = height / 2;
@@ -42,6 +26,30 @@ public class OptionScreen extends GameScreen {
 
             }
         };
+
+        this.keyDownEventListener = new KeyEventListener() {
+            @Override
+            public boolean onEvent(int keyCode, KeyEvent event) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_VOLUME_DOWN:
+                        // Next color theme
+                        particles.pickNextColorTheme();
+                        return true;
+
+                    case KeyEvent.KEYCODE_VOLUME_UP:
+                        // Prev color theme
+                        particles.pickPrevColorTheme();
+                        return true;
+
+                    case KeyEvent.KEYCODE_BACK:
+                        Core.updateGameState(parent);
+                        Core.sleep(500);
+                        return true;
+                }
+                return false;
+            }
+        };
+
 
         paint.setStyle(Paint.Style.FILL);
 
