@@ -1,5 +1,3 @@
-/* By aNNiMON from GipGameActivity */
-
 package com.xamgore.particles.core;
 
 public class Fps {
@@ -31,5 +29,9 @@ public class Fps {
 	public static long getDelay() {
 		long delay = System.currentTimeMillis() - startTimeForMeasureDelay;
 		return (delay > MAX_DELAY ? 0 : MAX_DELAY - delay);
+	}
+
+	public static long getCurrentFps() {
+		return currentFps;
 	}
 }
