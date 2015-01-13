@@ -1,6 +1,7 @@
 package com.xamgore.particles.core;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import java.util.EventListener;
@@ -12,6 +13,7 @@ public abstract class GameScreen {
 
     static public int width;
     static public int height;
+    static public Paint paint = new Paint();
 
     public TouchEventListener touchEventListener = new TouchEventListener();
     public KeyEventListener keyDownEventListener = new KeyEventListener();

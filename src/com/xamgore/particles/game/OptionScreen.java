@@ -38,17 +38,15 @@ public class OptionScreen extends GameScreen {
             }
         };
 
-
-        final Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
-        paint.setAntiAlias(true);
 
         this.drawEventListener = new DrawEventListener() {
             @Override
             public void onEvent(Canvas canvas) {
                 canvas.drawColor(Color.WHITE);
                 particles.draw(canvas, paint);
-                canvas.drawCircle(width / 2, height / 2, 90, paint);
+                paint.setColor(Color.LTGRAY);
+                canvas.drawCircle(0, 0, 80, paint);
             }
         };
     }

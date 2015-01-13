@@ -16,9 +16,6 @@ public class MainScreen extends GameScreen {
     private final static boolean FLAG_HQ_OPTION = true;
     private final static Random rnd = new Random();
 
-    private boolean ANTI_ALIAS_FLAG = false;
-    private Paint paint;
-
     private int colorThemeNum;
     private final static int BACKGROUND_COLOR = 0xff191919;
     private final static int[][] COLOURS = {
@@ -34,9 +31,6 @@ public class MainScreen extends GameScreen {
     };
 
     public MainScreen() {
-        paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-
         colorThemeNum = rnd.nextInt(COLOURS.length);
         Particle.colours = COLOURS[colorThemeNum];
 
@@ -67,13 +61,6 @@ public class MainScreen extends GameScreen {
                 if (event.getAction() == 0 && event.getX() > width - 30 && event.getY() > height - 30) {
                     OptionScreen nextScreen = new OptionScreen();
                     Core.updateGameState(nextScreen);
-
-                    if (FLAG_HQ_OPTION) {
-                        ANTI_ALIAS_FLAG = !ANTI_ALIAS_FLAG;
-                        paint.setAntiAlias(ANTI_ALIAS_FLAG);
-                        Core.sleep(100);
-                        return true;
-                    }
                 }
 
                 // ACTION_DOWN || ACTION_POINTER_DOWN || ACTION_MOVE
@@ -93,6 +80,8 @@ public class MainScreen extends GameScreen {
             }
         };
 
+        paint.setStyle(Paint.Style.FILL);
+
         this.drawEventListener = new DrawEventListener() {
             @Override
             public void onEvent(Canvas canvas) {
@@ -103,10 +92,8 @@ public class MainScreen extends GameScreen {
                 particleSystem.draw(canvas, paint);
 
                 // Draw option button
-                paint.setAntiAlias(true);
                 paint.setColor(0x77ffffff);
                 canvas.drawCircle(width, height, 30, paint);
-                paint.setAntiAlias(ANTI_ALIAS_FLAG);
 
                 // Draw FPS
                 paint.setColor(Color.WHITE);
