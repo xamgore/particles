@@ -8,12 +8,12 @@ import android.app.Activity;
 public class Core {
     private static Core _instance = null;
 
-    private static GameView gameView;
-    private static GameScreen gameState;
+    public static GameView gameView;
+    public static GameScreen gameScreen;
 
     private Core(Activity ctx, GameScreen screen) {
         // load all modules
-        gameState = screen;
+        gameScreen = screen;
         gameView = new GameView(ctx, screen);
         ctx.setContentView(gameView);
     }
@@ -24,7 +24,7 @@ public class Core {
 
     /* For game */
     public static void updateGameState(GameScreen screen) {
-        gameState = screen;
+        gameScreen = screen;
         gameView.onGameStateChanged(screen);
     }
 
@@ -35,15 +35,4 @@ public class Core {
             e.printStackTrace();
         }
     }
-
-
-    /* Getters */
-    public static GameScreen gameScreen() {
-        return gameState;
-    }
-
-    public static GameView getView() {
-        return gameView;
-    }
-
 }
