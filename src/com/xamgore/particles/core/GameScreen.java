@@ -1,58 +1,65 @@
 package com.xamgore.particles.core;
 
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import java.util.EventListener;
 
 /**
  * @author Goga
  */
 public abstract class GameScreen {
-    /**
-     * Called when GameView wants to draw something.
-     */
-    public abstract void draw(Canvas canvas);
 
-    /**
-     * Should compute some game mechanics.
-     */
-    public void update() {
+    protected int width;
+    protected int height;
+
+    public TouchEventListener touchEventListener = new TouchEventListener();
+    public KeyEventListener keyDownEventListener = new KeyEventListener();
+    public KeyEventListener keyUpEventListener   = new KeyEventListener();
+    public DrawEventListener drawEventListener   = new DrawEventListener();
+    public UpdateEventListener updateEventListener = new UpdateEventListener();
+    public SurfaceChangedEventListener surfaceChangedEventListener =
+            new SurfaceChangedEventListener();
+
+    public class KeyEventListener implements EventListener {
+        /**
+         * Called when a key event has occurred.
+         *
+         * @return True if the event was handled, false otherwise.
+         */
+        public boolean onEvent(int keyCode, KeyEvent event) { return false; }
     }
 
-    /**
-     * Override this method to handle touch screen motion events.
-     *
-     * @return True if the event was handled, false otherwise.
-     */
-    public boolean onTouchEvent(MotionEvent event) {
-        return false;
+    public class TouchEventListener implements EventListener {
+        /**
+         * Override this method to handle touch screen motion events.
+         *
+         * @return True if the event was handled, false otherwise.
+         */
+        public boolean onEvent(MotionEvent event) { return false; }
     }
 
-    /**
-     * Called when a key down event has occurred.
-     *
-     * @return True if the event was handled, false otherwise.
-     */
-    public boolean onKeyDownEvent(int keyCode, KeyEvent event) {
-        return false;
+    public class DrawEventListener implements EventListener {
+        /**
+         * Called when GameView wants to draw something.
+         */
+        public void onEvent(Canvas canvas) {}
     }
 
-    /**
-     * Called when a key up event has occurred.
-     *
-     * @return True if the event was handled, false otherwise.
-     */
-    public boolean onKeyUpEvent(int keyCode, KeyEvent event) {
-        return false;
+    public class UpdateEventListener implements EventListener {
+        /**
+         * Should compute some game mechanics.
+         */
+        public void onEvent() {}
     }
 
-    /**
-     * This is called immediately after any structural changes (format or
-     * size) have been made to the surface.  You should at this point update
-     * the imagery in the surface.  This method is always called at least
-     * once, after GameView has initialized.
-     */
-    public void onSurfaceChanged(int width, int height) {
+    public class SurfaceChangedEventListener implements EventListener {
+        /**
+         * This is called immediately after any structural changes (format or
+         * size) have been made to the surface.  You should at this point update
+         * the imagery in the surface.  This method is always called at least
+         * once, after GameView has initialized.
+         */
+        public void onEvent(int screenWidth, int screenHeight) {}
     }
 }

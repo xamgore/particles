@@ -19,8 +19,6 @@ public class MainScreen extends GameScreen {
 
     private boolean ANTI_ALIAS_FLAG = false;
     private Paint paint;
-    private int width;
-    private int height;
 
     private int colorThemeNum;
     private final static int BACKGROUND_COLOR = 0xff191919;
@@ -36,100 +34,110 @@ public class MainScreen extends GameScreen {
             {0xfffef4b6, 0xffffd6a2, 0xffafd0fd, 0xff5785e3},
     };
 
-    public MainScreen(int width, int height) {
-        this.width = width;
-        this.height = height;
-
+    public MainScreen(final int screenWidth, final int screenHeight) {
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
 
         colorThemeNum = rnd.nextInt(COLOURS.length);
         Particle.colours = COLOURS[colorThemeNum];
-    }
 
-    @Override
-    public void draw(Canvas canvas) {
-        // Fill background
-        canvas.drawColor(BACKGROUND_COLOR);
+        width = screenWidth;
+        height = screenHeight;
 
-        // Draw particles
-        particleSystem.draw(canvas, paint);
+        this.keyDownEventListener = new KeyEventListener() {
+            @Override
+            public boolean onEvent(int keyCode, KeyEvent event) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_VOLUME_DOWN:
+                        // Next color theme
+                        colorThemeNum = (colorThemeNum + 1) % COLOURS.length;
+                        Particle.colours = COLOURS[colorThemeNum];
+                        return true;
 
-        // Draw option button
-        paint.setAntiAlias(true);
-        paint.setColor(0x77ffffff);
-        canvas.drawCircle(width, height, 30, paint);
-        paint.setAntiAlias(ANTI_ALIAS_FLAG);
+                    case KeyEvent.KEYCODE_VOLUME_UP:
+                        // Prev color theme
+                        colorThemeNum = (COLOURS.length + colorThemeNum - 1) % COLOURS.length;
+                        Particle.colours = COLOURS[colorThemeNum];
+                        return true;
+                }
 
-        // Draw FPS
-        paint.setColor(Color.WHITE);
-        canvas.drawText("FPS: " + Fps.getFpsAsString(), 10, 10, paint);
-        if (FLAG_HQ_OPTION) {
-            canvas.drawText("HQ is " + (paint.isAntiAlias() ? "ON" : "OFF"), 70, 10, paint);
-            canvas.drawText(String.valueOf(particleSystem.count()), 145, 10, paint);
-        } else canvas.drawText(String.valueOf(particleSystem.count()), 70, 10, paint);
-    }
-
-    @Override
-    public void update() {
-        particleSystem.update();
-    }
-
-    @Override
-    public void onSurfaceChanged(int width, int height) {
-        this.width = width;
-        this.height = height;
-
-        particleSystem.makeOutburst(width, height);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == 0 && event.getX() > width - 30 && event.getY() > height - 30) {
-//            if (nextScreen == null)
-//                nextScreen = new OptionScreen(this);
-//            Core.updateGameState(nextScreen);
-
-            if (FLAG_HQ_OPTION) {
-                ANTI_ALIAS_FLAG = !ANTI_ALIAS_FLAG;
-                paint.setAntiAlias(ANTI_ALIAS_FLAG);
-                Core.sleep(100);
-                return true;
+                return false;
             }
-        }
+        };
 
-        // ACTION_DOWN || ACTION_POINTER_DOWN || ACTION_MOVE
-        if (event.getAction() >= 0 && event.getAction() < 3) {
-            boolean multiTouch = event.getPointerCount() > 1;
+        this.touchEventListener = new TouchEventListener() {
+            @Override
+            public boolean onEvent(MotionEvent event) {
+                if (event.getAction() == 0 && event.getX() > width - 30 && event.getY() > height - 30) {
+//              if (nextScreen == null)
+//                  nextScreen = new OptionScreen(this);
+//              Core.updateGameState(nextScreen);
 
-            // Create flushes under each finger
-            for (int i = 0; i < event.getPointerCount(); i++)
-                particleSystem.makeFlush(
-                        event.getX(i), event.getY(i), multiTouch
-                );
+                    if (FLAG_HQ_OPTION) {
+                        ANTI_ALIAS_FLAG = !ANTI_ALIAS_FLAG;
+                        paint.setAntiAlias(ANTI_ALIAS_FLAG);
+                        Core.sleep(100);
+                        return true;
+                    }
+                }
 
-            return true;
-        }
+                // ACTION_DOWN || ACTION_POINTER_DOWN || ACTION_MOVE
+                if (event.getAction() >= 0 && event.getAction() < 3) {
+                    boolean multiTouch = event.getPointerCount() > 1;
 
-        return false;
-    }
+                    // Create flushes under each finger
+                    for (int i = 0; i < event.getPointerCount(); i++)
+                        particleSystem.makeFlush(
+                                event.getX(i), event.getY(i), multiTouch
+                        );
 
-    @Override
-    public boolean onKeyDownEvent(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                // Next color theme
-                colorThemeNum = (colorThemeNum + 1) % COLOURS.length;
-                Particle.colours = COLOURS[colorThemeNum];
-                return true;
+                    return true;
+                }
 
-            case KeyEvent.KEYCODE_VOLUME_UP:
-                // Prev color theme
-                colorThemeNum = (COLOURS.length + colorThemeNum - 1) % COLOURS.length;
-                Particle.colours = COLOURS[colorThemeNum];
-                return true;
-        }
+                return false;
+            }
+        };
 
-        return false;
+        this.drawEventListener = new DrawEventListener() {
+            @Override
+            public void onEvent(Canvas canvas) {
+                // Fill background
+                canvas.drawColor(BACKGROUND_COLOR);
+
+                // Draw particles
+                particleSystem.draw(canvas, paint);
+
+                // Draw option button
+                paint.setAntiAlias(true);
+                paint.setColor(0x77ffffff);
+                canvas.drawCircle(width, height, 30, paint);
+                paint.setAntiAlias(ANTI_ALIAS_FLAG);
+
+                // Draw FPS
+                paint.setColor(Color.WHITE);
+                canvas.drawText("FPS: " + Fps.getFpsAsString(), 10, 10, paint);
+                if (FLAG_HQ_OPTION) {
+                    canvas.drawText("HQ is " + (paint.isAntiAlias() ? "ON" : "OFF"), 70, 10, paint);
+                    canvas.drawText(String.valueOf(particleSystem.count()), 145, 10, paint);
+                } else canvas.drawText(String.valueOf(particleSystem.count()), 70, 10, paint);
+            }
+        };
+
+        this.updateEventListener = new UpdateEventListener() {
+            @Override
+            public void onEvent() {
+                particleSystem.update();
+            }
+        };
+
+        this.surfaceChangedEventListener = new SurfaceChangedEventListener() {
+            @Override
+            public void onEvent(int screenWidth, int screenHeight) {
+                width = screenWidth;
+                height = screenHeight;
+
+                particleSystem.makeOutburst(width, height);
+            }
+        };
     }
 }

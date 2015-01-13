@@ -36,7 +36,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 Fps.startMeasuringDelay();
 
                 /* Game mechanics */
-                Core.gameScreen.update();
+                Core.gameScreen.updateEventListener.onEvent();
 
                 /* Drawings */
                 canvas = null;
@@ -44,7 +44,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     canvas = mSurfaceHolder.lockCanvas();
                     if (canvas != null) {
                         // Send request to Game class
-                        Core.gameScreen.draw(canvas);
+                        Core.gameScreen.drawEventListener.onEvent(canvas);
                     }
                 } finally {
                     if (canvas != null)
@@ -98,7 +98,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         ResourceManager.init(getResources(), width, height);
         if (Core.gameScreen != null) {
-            Core.gameScreen.onSurfaceChanged(width, height);
+            Core.gameScreen.surfaceChangedEventListener.onEvent(width, height);
         }
     }
 
@@ -106,7 +106,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
         boolean state = false;
         if (Core.gameScreen != null) {
-            state = Core.gameScreen.onTouchEvent(event);
+            state = Core.gameScreen.touchEventListener.onEvent(event);
         }
         return state || super.onTouchEvent(event);
     }
@@ -115,7 +115,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean state = false;
         if (Core.gameScreen != null) {
-            state = Core.gameScreen.onKeyDownEvent(keyCode, event);
+            state = Core.gameScreen.keyDownEventListener.onEvent(keyCode, event);
         }
         return state || super.onKeyDown(keyCode, event);
     }
@@ -124,7 +124,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         boolean state = false;
         if (Core.gameScreen != null) {
-            state = Core.gameScreen.onKeyUpEvent(keyCode, event);
+            state = Core.gameScreen.keyUpEventListener.onEvent(keyCode, event);
         }
         return state || super.onKeyUp(keyCode, event);
     }

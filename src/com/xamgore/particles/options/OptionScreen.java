@@ -8,32 +8,33 @@ import com.xamgore.particles.core.GameScreen;
 
 public class OptionScreen extends GameScreen {
     private final Paint paint;
-    private final GameScreen parent;
 
-    public OptionScreen(GameScreen parent) {
-        this.parent = parent;
-
+    public OptionScreen(final GameScreen parent) {
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
-    }
 
-    @Override
-    public void draw(Canvas canvas) {
-        // Background
-        canvas.drawColor(0xffffffff);
-    }
 
-    @Override
-    public boolean onKeyDownEvent(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            try {
-                Core.updateGameState(parent);
-                Thread.sleep(500);
-            } catch(Exception e) {}
+        this.keyDownEventListener = new KeyEventListener() {
+            @Override
+            public boolean onEvent(int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    try {
+                        Core.updateGameState(parent);
+                        Thread.sleep(500);
+                    } catch(Exception e) {}
 
-            return true;
-        }
+                    return true;
+                }
+                return false;
+            }
+        };
 
-        return false;
+        this.drawEventListener = new DrawEventListener() {
+            @Override
+            public void onEvent(Canvas canvas) {
+                // Background
+                canvas.drawColor(0xffffffff);
+            }
+        };
     }
 }
